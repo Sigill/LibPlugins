@@ -1,3 +1,5 @@
 mkdir -p plugins
-gcc -Wall x.c -o plugins/x.so -shared -fPIC
-gcc -Wall test_plugins.c -o test_plugins -ldl
+echo Building plugin x
+gcc -Wall x.cpp -o plugins/x.so -shared -fPIC
+echo building plugin test app
+gcc -Wall test_plugins.cpp -o test_plugins -ldl -lstdc++

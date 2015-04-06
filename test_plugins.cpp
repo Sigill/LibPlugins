@@ -1,9 +1,7 @@
 /**
-A sample program to load all the shared objects from the directory
-"plugins" and call their misc() function
+ * A sample program to load all the shared objects from the directory
+ * "plugins" and call their misc() function
  */
-
-
 
 #include <stddef.h>
 #include <stdio.h>
@@ -17,9 +15,9 @@ A sample program to load all the shared objects from the directory
 #define CURRENT_DIR "."
 #define PRG_VERSION "0.0a"
 
-
 /* Prototype for the misc() function */
 typedef void(*Misc)(char * buffer);
+
 /* A nice struct for a plugin */
 struct Plugin 
 {
@@ -30,8 +28,10 @@ struct Plugin
 	char *version;
 	char *info;
 };
+
 /* create an alias for easier usage*/
 typedef struct Plugin Plugin;
+
 /* A function for checking libdl errors */
 int dlok(const char *msg)
 {
@@ -42,6 +42,7 @@ int dlok(const char *msg)
 	}
 	return 1;
 }
+
 /* Loads plugin named "soname" into the struct Plugin plugin*/
 void *loadplugin(Plugin *plugin, const char *soname)
 {
@@ -50,7 +51,7 @@ void *loadplugin(Plugin *plugin, const char *soname)
 	/* Load the library, resolve symbols as they are needed. */
 	plugin->so = dlopen(soname, RTLD_LAZY);
 
-	if ( plugin->so ) {		
+	if ( plugin->so ) {
 		/* Get the misc() address */
 		plugin->misc = (Misc)dlsym(plugin->so, "misc");
 		if (!dlok("\\-misc() not found")) return 0;
@@ -70,6 +71,7 @@ void *loadplugin(Plugin *plugin, const char *soname)
 
 	return plugin->so;
 }
+
 /* A seperated unloader */
 int unloadplugin(Plugin *plugin)
 {
@@ -78,6 +80,7 @@ int unloadplugin(Plugin *plugin)
 
 /* Define the directory containing plugins */
 char plugindir[] = "./plugins";
+
 int main(void)
 {
 	/* Pointers for a directory and an entry */
@@ -100,8 +103,7 @@ int main(void)
 		/* Read all the entries - say there are only shared objects inside */
 		while ( (ep = readdir(dir)) ) {
 			/* Obviously skip these entries */
-			if ( !strcmp(ep->d_name, PARENT_DIR) || 
-					!strcmp(ep->d_name, CURRENT_DIR) ) continue;
+			if ( !strcmp(ep->d_name, PARENT_DIR) || !strcmp(ep->d_name, CURRENT_DIR) ) continue;
 
 			/* Try to load the plugin */
 			sprintf(buffer, "%s/%s", plugindir, ep->d_name);

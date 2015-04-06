@@ -10,6 +10,5 @@ public:
 
 // the types of the class factories
 typedef Plugin* create_t();
-typedef void destroy_t(Plugin*);
 
 #endif /* PLUGINS_HPP */

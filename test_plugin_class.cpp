@@ -1,6 +1,7 @@
 #include "Plugin.hpp"
 #include <iostream>
 #include <dlfcn.h>
+#include <stdexcept>
 
 int main() {
 	using std::cout;
@@ -24,22 +25,18 @@ int main() {
 		return 1;
 	}
 
-	destroy_t* destroy_plug = (destroy_t*) dlsym(plug, "destroy");
-	dlsym_error = dlerror();
-	if (dlsym_error) {
-		cerr << "Cannot load symbol destroy: " << dlsym_error << '\n';
-		return 1;
-	}
-
 	// create an instance of the class
 	Plugin* p = create_plug();
 
 	// use the class
-	p->do_something();
-
+	try {
+		p->do_something();
+	} catch (std::runtime_error &e) {
+		std::cerr << "Caught error: " << e.what() << std::endl;
+	}
 
 	// destroy the class
-	destroy_plug(p);
+	delete p;
 
 	// unload the plug library
 	dlclose(plug);
